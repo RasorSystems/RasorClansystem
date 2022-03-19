@@ -1,0 +1,10 @@
+prefix: "&f&lRasorSystems &8» "
+noperm: '&cYou dont hhave permission to do that!'
+isntonline: '&cThat player isnt online!'
+
+#mysql
+host: ''
+port: 3365
+user: ''
+passwort: ''
+database: ''

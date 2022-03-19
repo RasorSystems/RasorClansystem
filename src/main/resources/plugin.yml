@@ -1,0 +1,6 @@
+name: RasorClansystem
+author: GaaehHacked
+version: 1.0
+main: de.rasorsystems.main.Main
+commands:
+  clan:
