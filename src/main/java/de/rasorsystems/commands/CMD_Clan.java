@@ -1,11 +1,15 @@
 package de.rasorsystems.commands;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Iterator;
+import java.util.UUID;
 
+import com.sun.org.apache.xerces.internal.impl.xpath.regex.ParseException;
 import de.rasorsystems.main.Main;
 import de.rasorsystems.main.clan.ClanAPI;
 import de.rasorsystems.main.clan.MySQL;
+import de.rasorsystems.main.clan.PlayerFetcher;
 import de.rasorsystems.main.clan.Rankes;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -52,19 +56,24 @@ public class CMD_Clan extends Command {
             } else if (args[0].equalsIgnoreCase("info")) {
                 if (ClanAPI.isInClan(p.getUniqueId())) {
                     p.sendMessage( "§8§m)-----(--((§8 [§4§l" + ClanAPI.getClannameFromUser(p.getUniqueId()) + "§8] §8§m))--)-----(\n");
-                    p.sendMessage( "§4Owner§7 des Clanes: " + MySQL.loadUUID(ClanAPI.getClanOwnerUUID(ClanAPI.getClannameFromUser(p.getUniqueId()))));
-                    p.sendMessage( "\n§eClanbank: §b" + ClanAPI.getcoins(ClanAPI.getClannameFromUser(p.getUniqueId())));
+                    try {
+                        p.sendMessage( "§4Owner§7 des Clanes: " + PlayerFetcher.getName(UUID.fromString(ClanAPI.getClanOwnerUUID(ClanAPI.getClannameFromUser(p.getUniqueId())))));
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
                     p.sendMessage( "\n§eAlle Member:\n");
 
                     try {
                         var5 = ClanAPI.getClanMembers(ClanAPI.getClannameFromUser(p.getUniqueId())).iterator();
 
-                        while(var5.hasNext()) {
-                            s = (String)var5.next();
-                            p.sendMessage( "§e- Name: " + MySQL.loadUUID(s) + " §7- §b" + ClanAPI.getClannrang(s));
+                        while (var5.hasNext()) {
+                            s = (String) var5.next();
+                            p.sendMessage("§e- Name: " + PlayerFetcher.getName(UUID.fromString(s)) + " §7- §b" + ClanAPI.getClannrang(s));
                         }
-                    } catch (SQLException var7) {
-                        var7.printStackTrace();
+                    }catch (ParseException e) {
+                        e.printStackTrace();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
                     }
 
                     p.sendMessage( "\n§8§m)-----(--((§8 [§4§l" + ClanAPI.getClannameFromUser(p.getUniqueId()) + "§8] §8§m))--)-----(");
